@@ -3,10 +3,10 @@ import os
 import platform
 import subprocess
 import sys
-
+#Ensure stdout encoding is UTF-8
 if sys.stdout.encoding != 'utf-8':
     sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1)
-
+#Logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -18,6 +18,7 @@ logging.basicConfig(
 
 
 def install_and_import(package, module_name=None):
+    """Install and import a package."""
     try:
         if not module_name:
             module_name = package
@@ -47,6 +48,7 @@ import wmi
 
 
 def get_size(bytes, suffix="B"):
+    """Convert bytes to a human-readable format."""
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
         if bytes < factor:
@@ -55,6 +57,7 @@ def get_size(bytes, suffix="B"):
 
 
 def get_system_info():
+    """Retrieve system information."""
     os_info = platform.system() + " " + platform.release()
     computer_name = platform.node()
     cpu_info = cpuinfo.get_cpu_info()
@@ -88,6 +91,7 @@ def get_system_info():
 
 
 def get_disk_type():
+    """Retrieve disk types using WMI."""
     c = wmi.WMI()
     disk_types = []
     for disk in c.Win32_DiskDrive():
@@ -107,6 +111,7 @@ def get_disk_type():
 
 
 def get_disk_info():
+    """Retrieve disk information"""
     disk_info_list = []
     partitions = psutil.disk_partitions()
     disk_types = get_disk_type()
@@ -133,6 +138,7 @@ def get_disk_info():
 
 
 def write_to_excel(system_info, disk_info, filename, full_name):
+    """Write system and disk information to an Excel file."""
     try:
         if os.path.exists(filename):
             wb = load_workbook(filename)
